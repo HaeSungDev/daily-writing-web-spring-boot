@@ -1,21 +1,29 @@
 package com.dailywriting.web.user;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
     final UserRepository userRepository;
-    final BCryptPasswordEncoder bCryptPasswordEncoder;
+    final PasswordEncoder passwordEncoder;
 
-    public long join(String username, String password) {
-        User user = User.join(
-                username,
-                bCryptPasswordEncoder.encode(password)
-        );
+    @Transactional
+    public long join(User user) {
+        user.changePassword(passwordEncoder.encode(user.getPassword()));
+        validateDuplicateUser(user);
         userRepository.save(user);
         return user.getId();
+    }
+
+    private void validateDuplicateUser(User user) {
+        User duplicateUser = userRepository.findByUsername(user.getUsername());
+        if (duplicateUser != null) {
+            throw new UserDuplicateException();
+        }
     }
 }
