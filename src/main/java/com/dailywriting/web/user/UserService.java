@@ -14,10 +14,17 @@ public class UserService {
 
     @Transactional
     public long join(User user) {
-        user.changePassword(passwordEncoder.encode(user.getPassword()));
-        validateDuplicateUser(user);
-        userRepository.save(user);
-        return user.getId();
+        User encodedUser = encodeUser(user);
+        validateDuplicateUser(encodedUser);
+        userRepository.save(encodedUser);
+        return encodedUser.getId();
+    }
+
+    private User encodeUser(User user) {
+        return new User(
+                user.getUsername(),
+                passwordEncoder.encode(user.getPassword())
+        );
     }
 
     private void validateDuplicateUser(User user) {
