@@ -32,4 +32,7 @@ out/
 .vscode/
 
 ### Spring Boot ###
-application*.yml
+application.yml
+application-*.yml
+application.properties
+application-*.properties
