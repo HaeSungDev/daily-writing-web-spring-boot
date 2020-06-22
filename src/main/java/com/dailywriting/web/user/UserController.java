@@ -18,9 +18,6 @@ public class UserController {
         User user = new User(joinRequestDto.getUsername(), joinRequestDto.getPassword());
         JoinResponseDto joinResponseDto = new JoinResponseDto();
         joinResponseDto.setUserId(userService.join(user));
-        if (true) {
-            throw new Error("asdfasd");
-        }
         return joinResponseDto;
     }
 
