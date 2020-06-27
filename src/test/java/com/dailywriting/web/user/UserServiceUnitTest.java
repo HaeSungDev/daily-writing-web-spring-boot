@@ -20,7 +20,7 @@ public class UserServiceUnitTest {
     }
 
     @Test
-    public void 회원가입_테스트() {
+    public void joinTest() {
         // given
         User user = new User("testuser", "testpassword");
 
@@ -35,7 +35,7 @@ public class UserServiceUnitTest {
     }
 
     @Test
-    public void 회원가입_중복체크_테스트() {
+    public void joinDuplicateCheckTest() {
         // given
         User user = new User("testuser", "testpassword");
 

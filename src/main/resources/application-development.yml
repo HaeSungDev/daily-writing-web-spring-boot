@@ -26,11 +26,6 @@ logging:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
 
-token:
-  access:
-    jwt-secret: development-secret
-    expireInMs: 300000 # 5 minutes
-  refresh:
-    expireInMs: 1209600000 # 2 weeks
-
-
+app:
+  jwt:
+    secret-key: jwttestsecretkey
