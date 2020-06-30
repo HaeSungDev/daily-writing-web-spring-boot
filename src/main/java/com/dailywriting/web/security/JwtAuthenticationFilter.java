@@ -5,6 +5,7 @@ import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -22,38 +23,33 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
     final JwtTokenProvider jwtTokenProvider;
-    final JwtAuthenticationFailureHandler failureHandler;
+    final AuthenticationFailureHandler failureHandler;
 
     final String JWT_TOKEN_HEADER = "Authorization";
     final String JWT_TOEKN_PREFIX = "Bearer ";
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        Optional<HttpServletRequest> optionalHttpServletRequest = CommonUtils.safeCast(request, HttpServletRequest.class);
-        Optional<HttpServletResponse> optionalHttpServletResponse = CommonUtils.safeCast(request, HttpServletResponse.class);
+        HttpServletRequest httpServletRequest = (HttpServletRequest)request;
+        HttpServletResponse httpServletResponse = (HttpServletResponse)response;
 
-        if (optionalHttpServletRequest.isPresent() && optionalHttpServletResponse.isPresent()) {
-            HttpServletRequest httpServletRequest = optionalHttpServletRequest.get();
-            HttpServletResponse httpServletResponse = optionalHttpServletResponse.get();
+        String tokenHeader = httpServletRequest.getHeader(JWT_TOKEN_HEADER);
+        if (tokenHeader != null && tokenHeader.startsWith(JWT_TOEKN_PREFIX)) {
+            String jwtToken = tokenHeader.substring(JWT_TOEKN_PREFIX.length());
 
-            String tokenHeader = httpServletRequest.getHeader(JWT_TOKEN_HEADER);
-            if (tokenHeader != null && tokenHeader.startsWith(JWT_TOEKN_PREFIX)) {
-                String jwtToken = tokenHeader.substring(JWT_TOEKN_PREFIX.length());
-
-                JwtPayload jwtPayload;
-                try {
-                    jwtPayload = jwtTokenProvider.decode(jwtToken);
-                } catch (JwtException e) {
-                    failureHandler.onAuthenticationFailure(httpServletRequest, httpServletResponse, new JwtAuthenticationException("token is invalid"));
-                    return;
-                }
-
-                if (jwtPayload.isExpired(new Date())) {
-                    failureHandler.onAuthenticationFailure(httpServletRequest, httpServletResponse, new JwtAuthenticationException("token is expired"));
-                }
-
-                SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(jwtPayload, jwtToken));
+            JwtPayload jwtPayload;
+            try {
+                jwtPayload = jwtTokenProvider.decode(jwtToken);
+            } catch (JwtException e) {
+                failureHandler.onAuthenticationFailure(httpServletRequest, httpServletResponse, new JwtAuthenticationException("token is invalid"));
+                return;
             }
+
+            if (jwtPayload.isExpired(new Date())) {
+                failureHandler.onAuthenticationFailure(httpServletRequest, httpServletResponse, new JwtAuthenticationException("token is expired"));
+            }
+
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(jwtPayload, jwtToken));
         }
         chain.doFilter(request, response);
     }

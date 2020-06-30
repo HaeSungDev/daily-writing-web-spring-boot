@@ -2,7 +2,6 @@ package com.dailywriting.web.config;
 
 import com.dailywriting.web.security.JwtAuthenticationEntryPoint;
 import com.dailywriting.web.security.JwtAuthenticationFilter;
-import com.dailywriting.web.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,8 +11,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     final JwtAuthenticationFilter jwtAuthenticationFilter;
+    final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
