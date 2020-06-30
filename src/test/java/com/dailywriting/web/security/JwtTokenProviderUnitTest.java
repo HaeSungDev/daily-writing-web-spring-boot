@@ -15,12 +15,12 @@ public class JwtTokenProviderUnitTest {
 
         ReflectionTestUtils.setField(jwtTokenProvider, "jwtSecretKey", "tKCVbZ6wvApzaq649PdpbGV9yopAZkOY4MZmAv_lK90", String.class);
 
-        JwtClaimDto jwtClaimDto = new JwtClaimDto();
+        JwtPayload jwtClaimDto = new JwtPayload();
         jwtClaimDto.setExpiration(Date.from(LocalDateTime.of(2020, 7, 23, 23, 59, 59).atZone(ZoneId.systemDefault()).toInstant()));
         jwtClaimDto.setUserId(999999);
 
         String jwtToken = jwtTokenProvider.encode((jwtClaimDto));
-        JwtClaimDto decodedJwtClaimDto = jwtTokenProvider.decode(jwtToken);
+        JwtPayload decodedJwtClaimDto = jwtTokenProvider.decode(jwtToken);
 
         assertEquals(decodedJwtClaimDto.getUserId(), jwtClaimDto.getUserId());
         assertEquals(decodedJwtClaimDto.getExpiration().getTime(), jwtClaimDto.getExpiration().getTime());
