@@ -25,6 +25,8 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
+    org.springframework.transaction: TRACE
+    org.springframework.orm: TRACE
 
 app:
   jwt:
