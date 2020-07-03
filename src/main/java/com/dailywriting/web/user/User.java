@@ -1,5 +1,6 @@
 package com.dailywriting.web.user;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(
     name = "user",
     uniqueConstraints = @UniqueConstraint(name = "uk_user_username", columnNames = {
@@ -16,6 +17,12 @@ import javax.persistence.*;
     })
 )
 public class User {
+    @Builder
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")

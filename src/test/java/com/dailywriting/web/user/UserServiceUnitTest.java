@@ -20,6 +20,32 @@ public class UserServiceUnitTest {
     }
 
     @Test
+    public void loginTest() {
+        // given
+        User user = User.builder()
+                .username("testuser")
+                .password("testpassword")
+                .build();
+
+        when(userRepositoryMock.findByUsername("testuser")).thenReturn(null);
+        userService.join(user);
+
+        User joinUser = User.builder()
+                .username("testuser")
+                .password("encodedpassword")
+                .build();
+
+        // when
+        when(passwordEncoderMock.encode("testpassword")).thenReturn("encodedpassword");
+        when(passwordEncoderMock.matches("testpassword", "encodedpassword")).thenReturn(true);
+        when(userRepositoryMock.findByUsername("testuser")).thenReturn(joinUser);
+        User loginUser = userService.login("testuser", "testpassword");
+
+        // then
+        assertEquals(user.getUsername(), loginUser.getUsername());
+    }
+
+    @Test
     public void joinTest() {
         // given
         User user = User.builder()

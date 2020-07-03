@@ -1,10 +1,8 @@
 package com.dailywriting.web.user;
 
 import com.dailywriting.web.common.CommonExceptionResponseBody;
-import com.dailywriting.web.security.JwtTokenProvider;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +43,6 @@ public class UserController {
     @ExceptionHandler
     public ResponseEntity<CommonExceptionResponseBody> handleDuplicateUser(UserDuplicateException userDuplicateException) {
         CommonExceptionResponseBody responseBody = new CommonExceptionResponseBody("UserDuplicateError", "이미 존재하는 유저입니다.");
-        return new ResponseEntity<>(responseBody, HttpStatus.UNPROCESSABLE_ENTITY);
+        return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
     }
 }
