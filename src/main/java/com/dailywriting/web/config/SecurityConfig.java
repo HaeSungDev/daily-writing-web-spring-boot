@@ -18,7 +18,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            .authorizeRequests().antMatchers("/**").authenticated()
+            .authorizeRequests().antMatchers("/**").permitAll()
             .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
             .and().csrf().disable();
     }

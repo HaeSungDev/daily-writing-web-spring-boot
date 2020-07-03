@@ -31,6 +31,12 @@ public class JwtTokenProvider {
                 .parseClaimsJws(jwtToken)
                 .getBody();
 
-        return new JwtPayload(claims.get("user_id", Long.class), (Date) claims.getExpiration());
+        JwtPayload jwtPayload = JwtPayload
+                .builder()
+                .userId(claims.get("user_id", Long.class))
+                .expiration((Date) claims.getExpiration())
+                .build();
+
+        return jwtPayload;
     }
 }
