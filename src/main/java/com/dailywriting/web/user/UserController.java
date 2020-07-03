@@ -1,8 +1,10 @@
 package com.dailywriting.web.user;
 
 import com.dailywriting.web.common.CommonExceptionResponseBody;
+import com.dailywriting.web.security.JwtTokenProvider;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +18,10 @@ public class UserController {
 
     @PostMapping
     public JoinResponseDto join(@RequestBody JoinRequestDto joinRequestDto) {
-        User user = new User(joinRequestDto.getUsername(), joinRequestDto.getPassword());
+        User user = User.builder()
+            .username(joinRequestDto.username)
+            .password(joinRequestDto.password)
+            .build();
         JoinResponseDto joinResponseDto = new JoinResponseDto();
         try {
             joinResponseDto.setUserId(userService.join(user));

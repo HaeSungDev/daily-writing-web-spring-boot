@@ -22,7 +22,10 @@ public class UserServiceUnitTest {
     @Test
     public void joinTest() {
         // given
-        User user = new User("testuser", "testpassword");
+        User user = User.builder()
+            .username("testuser")
+            .password("testpassword")
+            .build();
 
         // when
         when(userRepositoryMock.findByUsername("testuser")).thenReturn(null);
@@ -37,10 +40,18 @@ public class UserServiceUnitTest {
     @Test
     public void joinDuplicateCheckTest() {
         // given
-        User user = new User("testuser", "testpassword");
+        User user = User.builder()
+            .username("testuser")
+            .password("testpassword")
+            .build();
 
         // when
-        when(userRepositoryMock.findByUsername(user.getUsername())).thenReturn(new User("testuser", "encodedpassword"));
+        when(userRepositoryMock.findByUsername(user.getUsername())).thenReturn(
+            User.builder()
+                .username("testuser")
+                .password("encodedpassword")
+                .build()
+        );
 
         // then
         assertThrows(UserDuplicateException.class, () -> {
