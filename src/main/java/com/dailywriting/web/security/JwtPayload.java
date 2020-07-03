@@ -1,12 +1,12 @@
 package com.dailywriting.web.security;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.util.Date;
 
 @Getter
-@AllArgsConstructor
+@Builder
 public class JwtPayload {
     long userId;
     Date expiration;
