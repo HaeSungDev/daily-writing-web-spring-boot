@@ -1,7 +1,10 @@
-package com.dailywriting.web.user;
+package com.dailywriting.web.user.controller;
 
 import com.dailywriting.web.common.CommonExceptionResponseBody;
-import lombok.Data;
+import com.dailywriting.web.user.domain.UserService;
+import com.dailywriting.web.user.dto.JoinDto;
+import com.dailywriting.web.user.dto.JoinResponseDto;
+import com.dailywriting.web.user.exception.UserDuplicateException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -15,34 +18,20 @@ public class UserController {
     final private UserService userService;
 
     @PostMapping
-    public JoinResponseDto join(@RequestBody JoinRequestDto joinRequestDto) {
-        User user = User.builder()
-            .username(joinRequestDto.username)
-            .password(joinRequestDto.password)
-            .build();
-        JoinResponseDto joinResponseDto = new JoinResponseDto();
+    public JoinResponseDto join(@RequestBody JoinDto joinDto) {
         try {
-            joinResponseDto.setUserId(userService.join(user));
+            return JoinResponseDto
+                .builder()
+                .userId(userService.join(joinDto))
+                .build();
         } catch (DataIntegrityViolationException e) {
             throw new UserDuplicateException();
         }
-        return joinResponseDto;
-    }
-
-    @Data
-    public static class JoinRequestDto {
-        String username;
-        String password;
-    }
-
-    @Data
-    public static class JoinResponseDto {
-        long userId;
     }
 
     @ExceptionHandler
     public ResponseEntity<CommonExceptionResponseBody> handleDuplicateUser(UserDuplicateException userDuplicateException) {
         CommonExceptionResponseBody responseBody = new CommonExceptionResponseBody("UserDuplicateError", "이미 존재하는 유저입니다.");
-        return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(responseBody, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }

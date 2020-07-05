@@ -1,4 +1,4 @@
-package com.dailywriting.web.user;
+package com.dailywriting.web.user.domain;
 
 import lombok.AccessLevel;
 import lombok.Builder;

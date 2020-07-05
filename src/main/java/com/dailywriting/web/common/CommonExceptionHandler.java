@@ -6,9 +6,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+
 @Slf4j
 @ControllerAdvice
 public class CommonExceptionHandler {
+    @ExceptionHandler
+    public ResponseEntity<CommonExceptionResponseBody> validationExceptionHandler(ConstraintViolationException e) {
+        ConstraintViolation<?> constraintViolation = (ConstraintViolation<?>)e.getConstraintViolations().toArray()[0];
+
+        return new ResponseEntity<>(new CommonExceptionResponseBody("ValidationError", constraintViolation.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler
     public ResponseEntity<CommonExceptionResponseBody> handler(Exception e) {
         log.debug("CommonExceptionHandler catch exception", e);
