@@ -1,4 +1,4 @@
-package com.dailywriting.web.user;
+package com.dailywriting.web.user.exception;
 
 public class LoginFailException extends RuntimeException {
 }

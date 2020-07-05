@@ -1,6 +1,9 @@
-package com.dailywriting.web.user;
+package com.dailywriting.web.user.controller;
 
 import com.dailywriting.web.common.CommonExceptionResponseBody;
+import com.dailywriting.web.user.domain.User;
+import com.dailywriting.web.user.exception.UserDuplicateException;
+import com.dailywriting.web.user.domain.UserService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;

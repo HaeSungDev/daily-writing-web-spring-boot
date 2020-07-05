@@ -1,5 +1,7 @@
-package com.dailywriting.web.user;
+package com.dailywriting.web.user.domain;
 
+import com.dailywriting.web.user.exception.LoginFailException;
+import com.dailywriting.web.user.exception.UserDuplicateException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
