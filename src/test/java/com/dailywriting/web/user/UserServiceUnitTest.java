@@ -3,6 +3,7 @@ package com.dailywriting.web.user;
 import com.dailywriting.web.user.domain.User;
 import com.dailywriting.web.user.domain.UserRepository;
 import com.dailywriting.web.user.domain.UserService;
+import com.dailywriting.web.user.dto.JoinDto;
 import com.dailywriting.web.user.exception.UserDuplicateException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,13 +27,14 @@ public class UserServiceUnitTest {
     @Test
     public void loginTest() {
         // given
-        User user = User.builder()
-                .username("testuser")
-                .password("testpassword")
-                .build();
+        JoinDto joinDto = JoinDto
+            .builder()
+            .username("testuser")
+            .password("testpassword")
+            .build();
 
         when(userRepositoryMock.findByUsername("testuser")).thenReturn(null);
-        userService.join(user);
+        userService.join(joinDto);
 
         User joinUser = User.builder()
                 .username("testuser")
@@ -46,37 +48,39 @@ public class UserServiceUnitTest {
         User loginUser = userService.login("testuser", "testpassword");
 
         // then
-        assertEquals(user.getUsername(), loginUser.getUsername());
+        assertEquals(joinDto.getUsername(), loginUser.getUsername());
     }
 
     @Test
     public void joinTest() {
         // given
-        User user = User.builder()
+        JoinDto joinDto = JoinDto
+            .builder()
             .username("testuser")
             .password("testpassword")
             .build();
 
         // when
         when(userRepositoryMock.findByUsername("testuser")).thenReturn(null);
-        userService.join(user);
+        userService.join(joinDto);
 
         // then
-        verify(userRepositoryMock, times(1)).findByUsername(user.getUsername());
+        verify(userRepositoryMock, times(1)).findByUsername(joinDto.getUsername());
         verify(userRepositoryMock, times(1)).save(any(User.class));
-        verify(passwordEncoderMock, times(1)).encode(user.getPassword());
+        verify(passwordEncoderMock, times(1)).encode(joinDto.getPassword());
     }
 
     @Test
     public void joinDuplicateCheckTest() {
         // given
-        User user = User.builder()
+        JoinDto joinDto = JoinDto
+            .builder()
             .username("testuser")
             .password("testpassword")
             .build();
 
         // when
-        when(userRepositoryMock.findByUsername(user.getUsername())).thenReturn(
+        when(userRepositoryMock.findByUsername(joinDto.getUsername())).thenReturn(
             User.builder()
                 .username("testuser")
                 .password("encodedpassword")
@@ -85,7 +89,7 @@ public class UserServiceUnitTest {
 
         // then
         assertThrows(UserDuplicateException.class, () -> {
-            userService.join(user);
+            userService.join(joinDto);
         });
     }
 }
