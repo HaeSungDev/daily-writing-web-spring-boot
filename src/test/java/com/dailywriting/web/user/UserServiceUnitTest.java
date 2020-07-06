@@ -4,6 +4,7 @@ import com.dailywriting.web.user.domain.User;
 import com.dailywriting.web.user.domain.UserRepository;
 import com.dailywriting.web.user.domain.UserService;
 import com.dailywriting.web.user.dto.JoinDto;
+import com.dailywriting.web.user.dto.LoginDto;
 import com.dailywriting.web.user.exception.UserDuplicateException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,7 +46,13 @@ public class UserServiceUnitTest {
         when(passwordEncoderMock.encode("testpassword")).thenReturn("encodedpassword");
         when(passwordEncoderMock.matches("testpassword", "encodedpassword")).thenReturn(true);
         when(userRepositoryMock.findByUsername("testuser")).thenReturn(joinUser);
-        User loginUser = userService.login("testuser", "testpassword");
+        User loginUser = userService.login(
+            LoginDto
+                .builder()
+                .username("testuser")
+                .password("testpassword")
+                .build()
+        );
 
         // then
         assertEquals(joinDto.getUsername(), loginUser.getUsername());
