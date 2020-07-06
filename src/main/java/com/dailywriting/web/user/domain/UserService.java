@@ -1,6 +1,7 @@
 package com.dailywriting.web.user.domain;
 
 import com.dailywriting.web.user.dto.JoinDto;
+import com.dailywriting.web.user.dto.LoginDto;
 import com.dailywriting.web.user.exception.LoginFailException;
 import com.dailywriting.web.user.exception.UserDuplicateException;
 import lombok.RequiredArgsConstructor;
@@ -20,20 +21,13 @@ public class UserService {
     final UserRepository userRepository;
     final PasswordEncoder passwordEncoder;
 
-    public User login(String username, String password) {
-        if (!StringUtils.hasText(username)) {
-            throw new IllegalArgumentException("username은 필수 값입니다.");
-        }
-        if (!StringUtils.hasText(password)) {
-            throw new IllegalArgumentException("password는 필수 값입니다.");
-        }
-
-        User user = userRepository.findByUsername(username);
+    public User login(@Valid LoginDto loginDto) {
+        User user = userRepository.findByUsername(loginDto.getUsername());
         if (user == null) {
             throw new LoginFailException();
         }
 
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+        if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
             throw new LoginFailException();
         }
 
@@ -42,7 +36,6 @@ public class UserService {
 
     @Transactional
     public long join(@Valid JoinDto joinDto) {
-        // @TODO validation user
         User encodedUser = User
             .builder()
             .username(joinDto.getUsername())

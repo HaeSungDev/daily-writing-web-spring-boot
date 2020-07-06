@@ -3,10 +3,11 @@ package com.dailywriting.web.user.controller;
 import com.dailywriting.web.common.CommonExceptionResponseBody;
 import com.dailywriting.web.security.JwtPayload;
 import com.dailywriting.web.security.JwtTokenProvider;
-import com.dailywriting.web.user.exception.LoginFailException;
 import com.dailywriting.web.user.domain.User;
 import com.dailywriting.web.user.domain.UserService;
-import lombok.Data;
+import com.dailywriting.web.user.dto.GenerateTokenResponseDto;
+import com.dailywriting.web.user.dto.LoginDto;
+import com.dailywriting.web.user.exception.LoginFailException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -29,8 +30,8 @@ public class TokenController {
     private long expirationSeconds;
 
     @PostMapping()
-    public GenerateTokenResponseDto generateToken(@RequestBody GenerateTokenRequestDto generateTokenRequestDto) {
-        User loginUser = userService.login(generateTokenRequestDto.getUsername(), generateTokenRequestDto.getPassword());
+    public GenerateTokenResponseDto generateToken(@RequestBody LoginDto loginDto) {
+        User loginUser = userService.login(loginDto);
 
         Date expiration = Date.from(
                 LocalDateTime.now().plus(expirationSeconds, ChronoUnit.SECONDS).atZone(ZoneId.systemDefault()).toInstant()
@@ -44,22 +45,10 @@ public class TokenController {
 
         String token = jwtTokenProvider.encode(jwtPayload);
 
-        GenerateTokenResponseDto generateTokenResponseDto = new GenerateTokenResponseDto();
-        generateTokenResponseDto.setToken(token);
-
-        return generateTokenResponseDto;
-    }
-
-    // DTO
-    @Data
-    public static class GenerateTokenRequestDto {
-        String username;
-        String password;
-    }
-
-    @Data
-    public static class GenerateTokenResponseDto {
-        String token;
+        return GenerateTokenResponseDto
+            .builder()
+            .token(token)
+            .build();
     }
 
     @ExceptionHandler
