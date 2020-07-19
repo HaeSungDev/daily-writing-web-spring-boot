@@ -1,33 +1,28 @@
 package com.dailywriting.web.user.domain;
 
-import com.dailywriting.web.user.dto.JoinDto;
-import com.dailywriting.web.user.dto.LoginDto;
+import com.dailywriting.web.user.dto.CreateTokenRequestDto;
+import com.dailywriting.web.user.dto.JoinRequestDto;
 import com.dailywriting.web.user.exception.LoginFailException;
 import com.dailywriting.web.user.exception.UserDuplicateException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.annotation.Validated;
-
-import javax.validation.Valid;
 
 @Service
-@Validated
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
     final UserRepository userRepository;
     final PasswordEncoder passwordEncoder;
 
-    public User login(@Valid LoginDto loginDto) {
-        User user = userRepository.findByUsername(loginDto.getUsername());
+    public User login(CreateTokenRequestDto createTokenRequestDto) {
+        User user = userRepository.findByUsername(createTokenRequestDto.getUsername());
         if (user == null) {
             throw new LoginFailException();
         }
 
-        if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(createTokenRequestDto.getPassword(), user.getPassword())) {
             throw new LoginFailException();
         }
 
@@ -35,11 +30,11 @@ public class UserService {
     }
 
     @Transactional
-    public long join(@Valid JoinDto joinDto) {
+    public long join(JoinRequestDto joinRequestDto) {
         User encodedUser = User
             .builder()
-            .username(joinDto.getUsername())
-            .password(passwordEncoder.encode(joinDto.getPassword()))
+            .username(joinRequestDto.getUsername())
+            .password(passwordEncoder.encode(joinRequestDto.getPassword()))
             .build();
 
         validateDuplicateUser(encodedUser);

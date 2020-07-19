@@ -12,7 +12,7 @@ import javax.validation.constraints.Pattern;
 @Getter
 @Setter
 @NoArgsConstructor
-public class JoinDto {
+public class JoinRequestDto {
     @Email(message = "올바른 이메일을 입력해주세요.")
     @NotBlank
     String username;
@@ -20,7 +20,7 @@ public class JoinDto {
     String password;
 
     @Builder
-    public JoinDto(String username, String password) {
+    public JoinRequestDto(String username, String password) {
         this.username = username;
         this.password = password;
     }

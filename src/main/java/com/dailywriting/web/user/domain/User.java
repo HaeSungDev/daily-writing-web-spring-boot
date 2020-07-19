@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -33,6 +34,12 @@ public class User {
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "created_datetime")
+    private LocalDateTime createdDateTime;
+
+    @Column(name = "updated_datetime")
+    private LocalDateTime updatedDateTime;
 
     @Version
     private long version;

@@ -21,11 +21,11 @@ public class JwtAuthenticationFailureHandler implements AuthenticationFailureHan
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setContentType("application/json;charset=utf-8");
-
-        BufferedWriter bufferedWriter = new BufferedWriter(response.getWriter());
-        CommonExceptionResponseBody responseBody = new CommonExceptionResponseBody("AuthenticationError", "회원 인증이 필요합니다.");
-        objectMapper.writeValue(bufferedWriter, responseBody);
+//        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//        response.setContentType("application/json;charset=utf-8");
+//
+//        BufferedWriter bufferedWriter = new BufferedWriter(response.getWriter());
+//        CommonExceptionResponseBody responseBody = new CommonExceptionResponseBody("AuthenticationError", "회원 인증이 필요합니다.");
+//        objectMapper.writeValue(bufferedWriter, responseBody);
     }
 }
