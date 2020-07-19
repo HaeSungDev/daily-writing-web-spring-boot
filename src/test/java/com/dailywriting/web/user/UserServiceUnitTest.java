@@ -1,10 +1,11 @@
 package com.dailywriting.web.user;
 
+import com.dailywriting.web.common.CommonExceptionResponseBody;
 import com.dailywriting.web.user.domain.User;
 import com.dailywriting.web.user.domain.UserRepository;
 import com.dailywriting.web.user.domain.UserService;
-import com.dailywriting.web.user.dto.JoinDto;
-import com.dailywriting.web.user.dto.LoginDto;
+import com.dailywriting.web.user.dto.JoinRequestDto;
+import com.dailywriting.web.user.dto.CreateTokenRequestDto;
 import com.dailywriting.web.user.exception.UserDuplicateException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,14 +29,14 @@ public class UserServiceUnitTest {
     @Test
     public void loginTest() {
         // given
-        JoinDto joinDto = JoinDto
+        JoinRequestDto joinRequestDto = JoinRequestDto
             .builder()
             .username("testuser")
             .password("testpassword")
             .build();
 
         when(userRepositoryMock.findByUsername("testuser")).thenReturn(null);
-        userService.join(joinDto);
+        userService.join(joinRequestDto);
 
         User joinUser = User.builder()
                 .username("testuser")
@@ -47,7 +48,7 @@ public class UserServiceUnitTest {
         when(passwordEncoderMock.matches("testpassword", "encodedpassword")).thenReturn(true);
         when(userRepositoryMock.findByUsername("testuser")).thenReturn(joinUser);
         User loginUser = userService.login(
-            LoginDto
+            CreateTokenRequestDto
                 .builder()
                 .username("testuser")
                 .password("testpassword")
@@ -55,13 +56,13 @@ public class UserServiceUnitTest {
         );
 
         // then
-        assertEquals(joinDto.getUsername(), loginUser.getUsername());
+        assertEquals(joinRequestDto.getUsername(), loginUser.getUsername());
     }
 
     @Test
     public void joinTest() {
         // given
-        JoinDto joinDto = JoinDto
+        JoinRequestDto joinDto = JoinRequestDto
             .builder()
             .username("testuser")
             .password("testpassword")
@@ -80,7 +81,7 @@ public class UserServiceUnitTest {
     @Test
     public void joinDuplicateCheckTest() {
         // given
-        JoinDto joinDto = JoinDto
+        JoinRequestDto joinDto = JoinRequestDto
             .builder()
             .username("testuser")
             .password("testpassword")

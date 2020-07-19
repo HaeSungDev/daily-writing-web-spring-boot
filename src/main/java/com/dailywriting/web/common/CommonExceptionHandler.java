@@ -3,25 +3,45 @@ package com.dailywriting.web.common;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @ControllerAdvice
 public class CommonExceptionHandler {
     @ExceptionHandler
-    public ResponseEntity<CommonExceptionResponseBody> validationExceptionHandler(ConstraintViolationException e) {
-        ConstraintViolation<?> constraintViolation = (ConstraintViolation<?>)e.getConstraintViolations().toArray()[0];
+    public ResponseEntity<CommonExceptionResponseBody> validationExceptionHandler(MethodArgumentNotValidException methodArgumentNotValidException) {
+        List<FieldError> fieldErrors = methodArgumentNotValidException.getBindingResult().getFieldErrors();
+        CommonExceptionResponseBody responseBody = CommonExceptionResponseBody
+            .create(
+                CommonExceptionCode.VALIDATION_ERROR,
+                fieldErrors
+                    .stream()
+                    .map(
+                        (fieldError) -> CommonExceptionResponseBody.ParameterError
+                            .create(
+                                fieldError.getField(), fieldError.getDefaultMessage()
+                            )
+                    )
+                    .collect(Collectors.toList())
+            );
 
-        return new ResponseEntity<>(new CommonExceptionResponseBody("ValidationError", constraintViolation.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<CommonExceptionResponseBody>(responseBody, HttpStatus.valueOf(responseBody.getStatus()));
     }
 
     @ExceptionHandler
     public ResponseEntity<CommonExceptionResponseBody> handler(Exception e) {
         log.debug("CommonExceptionHandler catch exception", e);
-        return new ResponseEntity<>(new CommonExceptionResponseBody("InternalServerError", "서버 처리 도중 오류가 발생했습니다."), HttpStatus.INTERNAL_SERVER_ERROR);
+
+        CommonExceptionResponseBody responseBody = CommonExceptionResponseBody.create(
+            CommonExceptionCode.SERVER_ERROR
+        );
+
+        return new ResponseEntity<CommonExceptionResponseBody>(responseBody, HttpStatus.valueOf(responseBody.getStatus()));
     }
 }
