@@ -1,5 +1,6 @@
 package com.dailywriting.web.common;
 
+import com.dailywriting.web.user.exception.UserDuplicateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,12 @@ import java.util.stream.Collectors;
 @Slf4j
 @ControllerAdvice
 public class CommonExceptionHandler {
+    @ExceptionHandler
+    public ResponseEntity<CommonExceptionResponseBody> userDuplicateExceptionHandler(UserDuplicateException userDuplicateException) {
+        CommonExceptionResponseBody responseBody = CommonExceptionResponseBody.create(CommonExceptionCode.USER_DUPLICATE_ERROR);
+        return new ResponseEntity<>(responseBody, HttpStatus.valueOf(responseBody.getStatus()));
+    }
+
     @ExceptionHandler
     public ResponseEntity<CommonExceptionResponseBody> validationExceptionHandler(MethodArgumentNotValidException methodArgumentNotValidException) {
         List<FieldError> fieldErrors = methodArgumentNotValidException.getBindingResult().getFieldErrors();
@@ -31,17 +38,17 @@ public class CommonExceptionHandler {
                     .collect(Collectors.toList())
             );
 
-        return new ResponseEntity<CommonExceptionResponseBody>(responseBody, HttpStatus.valueOf(responseBody.getStatus()));
+        return new ResponseEntity<>(responseBody, HttpStatus.valueOf(responseBody.getStatus()));
     }
 
     @ExceptionHandler
-    public ResponseEntity<CommonExceptionResponseBody> handler(Exception e) {
+    public ResponseEntity<CommonExceptionResponseBody> serverExceptionHandler(Exception e) {
         log.debug("CommonExceptionHandler catch exception", e);
 
         CommonExceptionResponseBody responseBody = CommonExceptionResponseBody.create(
             CommonExceptionCode.SERVER_ERROR
         );
 
-        return new ResponseEntity<CommonExceptionResponseBody>(responseBody, HttpStatus.valueOf(responseBody.getStatus()));
+        return new ResponseEntity<>(responseBody, HttpStatus.valueOf(responseBody.getStatus()));
     }
 }
