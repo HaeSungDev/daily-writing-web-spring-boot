@@ -1,5 +1,6 @@
 package com.dailywriting.web.security;
 
+import com.dailywriting.web.common.CommonExceptionCode;
 import com.dailywriting.web.common.CommonExceptionResponseBody;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +22,12 @@ public class JwtAuthenticationFailureHandler implements AuthenticationFailureHan
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-//        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//        response.setContentType("application/json;charset=utf-8");
-//
-//        BufferedWriter bufferedWriter = new BufferedWriter(response.getWriter());
-//        CommonExceptionResponseBody responseBody = new CommonExceptionResponseBody("AuthenticationError", "회원 인증이 필요합니다.");
-//        objectMapper.writeValue(bufferedWriter, responseBody);
+        CommonExceptionResponseBody responseBody = CommonExceptionResponseBody.create(CommonExceptionCode.UNAUTHORIZED_ERROR);
+
+        response.setStatus(responseBody.getStatus());
+        response.setContentType("application/json;charset=utf-8");
+
+        BufferedWriter bufferedWriter = new BufferedWriter(response.getWriter());
+        objectMapper.writeValue(bufferedWriter, responseBody);
     }
 }

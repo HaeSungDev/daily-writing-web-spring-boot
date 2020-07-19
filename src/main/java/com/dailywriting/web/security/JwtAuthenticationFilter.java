@@ -23,7 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
     final JwtTokenProvider jwtTokenProvider;
-//    final AuthenticationFailureHandler failureHandler;
+    final AuthenticationFailureHandler failureHandler;
 
     final String JWT_TOKEN_HEADER = "Authorization";
     final String JWT_TOEKN_PREFIX = "Bearer ";
@@ -41,13 +41,12 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             try {
                 jwtPayload = jwtTokenProvider.decode(jwtToken);
             } catch (JwtException e) {
-//                failureHandler.onAuthenticationFailure(httpServletRequest, httpServletResponse, new JwtAuthenticationException("token is invalid"));
-//                return;
-                throw new JwtAuthenticationException("token is invalid");
+                failureHandler.onAuthenticationFailure(httpServletRequest, httpServletResponse, new JwtAuthenticationException("token is invalid"));
+                return;
             }
 
             if (jwtPayload.isExpired(new Date())) {
-//                failureHandler.onAuthenticationFailure(httpServletRequest, httpServletResponse, new JwtAuthenticationException("token is expired"));
+                failureHandler.onAuthenticationFailure(httpServletRequest, httpServletResponse, new JwtAuthenticationException("token is expired"));
                 throw new JwtAuthenticationException("token is invalid");
             }
 
