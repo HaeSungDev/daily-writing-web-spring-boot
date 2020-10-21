@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -21,7 +22,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends GenericFilterBean {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
     final JwtTokenProvider jwtTokenProvider;
     final AuthenticationFailureHandler failureHandler;
 
@@ -29,10 +30,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     final String JWT_TOEKN_PREFIX = "Bearer ";
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest)request;
-        HttpServletResponse httpServletResponse = (HttpServletResponse)response;
-
+    public void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain chain) throws IOException, ServletException {
         String tokenHeader = httpServletRequest.getHeader(JWT_TOKEN_HEADER);
         if (tokenHeader != null && tokenHeader.startsWith(JWT_TOEKN_PREFIX)) {
             String jwtToken = tokenHeader.substring(JWT_TOEKN_PREFIX.length());
@@ -52,6 +50,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
             SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(jwtPayload, jwtToken));
         }
-        chain.doFilter(request, response);
+        chain.doFilter(httpServletRequest, httpServletResponse);
     }
 }
