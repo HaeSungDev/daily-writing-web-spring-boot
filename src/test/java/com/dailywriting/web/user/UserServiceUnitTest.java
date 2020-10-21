@@ -1,17 +1,17 @@
 package com.dailywriting.web.user;
 
-import com.dailywriting.web.common.CommonExceptionResponseBody;
 import com.dailywriting.web.user.domain.User;
 import com.dailywriting.web.user.domain.UserRepository;
 import com.dailywriting.web.user.domain.UserService;
-import com.dailywriting.web.user.dto.JoinRequestDto;
 import com.dailywriting.web.user.dto.CreateTokenRequestDto;
+import com.dailywriting.web.user.dto.JoinRequestDto;
 import com.dailywriting.web.user.exception.UserDuplicateException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class UserServiceUnitTest {
@@ -96,8 +96,6 @@ public class UserServiceUnitTest {
         );
 
         // then
-        assertThrows(UserDuplicateException.class, () -> {
-            userService.join(joinDto);
-        });
+        assertThrows(UserDuplicateException.class, () -> userService.join(joinDto));
     }
 }

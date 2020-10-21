@@ -1,7 +1,6 @@
 package com.dailywriting.web.user.controller;
 
 import com.dailywriting.web.user.domain.UserService;
-import com.dailywriting.web.user.dto.CreateTokenResponseDto;
 import com.dailywriting.web.user.dto.JoinRequestDto;
 import com.dailywriting.web.user.dto.JoinResponseDto;
 import com.dailywriting.web.user.exception.UserDuplicateException;

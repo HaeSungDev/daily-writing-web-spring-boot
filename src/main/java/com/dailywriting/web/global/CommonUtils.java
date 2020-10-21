@@ -1,4 +1,4 @@
-package com.dailywriting.web.common;
+package com.dailywriting.web.global;
 
 import java.util.Optional;
 
