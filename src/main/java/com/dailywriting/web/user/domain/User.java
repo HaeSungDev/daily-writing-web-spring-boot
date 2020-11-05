@@ -1,5 +1,6 @@
 package com.dailywriting.web.user.domain;
 
+import com.dailywriting.web.Post.domain.Post;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -23,6 +25,9 @@ public class User {
         this.username = username;
         this.password = password;
     }
+
+    @OneToMany(mappedBy = "user")
+    List<Post> posts;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
