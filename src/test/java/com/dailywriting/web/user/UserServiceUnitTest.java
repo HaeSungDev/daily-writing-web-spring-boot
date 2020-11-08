@@ -2,7 +2,7 @@ package com.dailywriting.web.user;
 
 import com.dailywriting.web.user.domain.User;
 import com.dailywriting.web.user.domain.UserRepository;
-import com.dailywriting.web.user.domain.UserService;
+import com.dailywriting.web.user.service.UserService;
 import com.dailywriting.web.user.dto.CreateTokenRequestDto;
 import com.dailywriting.web.user.dto.JoinRequestDto;
 import com.dailywriting.web.user.exception.UserDuplicateException;

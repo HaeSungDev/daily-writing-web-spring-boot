@@ -1,13 +1,13 @@
 package com.dailywriting.web.user.domain;
 
 import com.dailywriting.web.Post.domain.Post;
+import com.dailywriting.web.global.base.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -19,7 +19,7 @@ import java.util.List;
             "username"
     })
 )
-public class User {
+public class User extends BaseTimeEntity {
     @Builder
     public User(String username, String password) {
         this.username = username;
@@ -39,15 +39,6 @@ public class User {
 
     @Column(name = "password", nullable = false)
     private String password;
-
-    @Column(name = "created_datetime")
-    private LocalDateTime createdDateTime;
-
-    @Column(name = "updated_datetime")
-    private LocalDateTime updatedDateTime;
-
-    @Version
-    private long version;
 
     public void changePassword(String password) {
         this.password = password;

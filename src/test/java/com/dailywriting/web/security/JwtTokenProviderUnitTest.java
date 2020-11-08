@@ -16,7 +16,7 @@ public class JwtTokenProviderUnitTest {
 
         ReflectionTestUtils.setField(jwtTokenProvider, "jwtSecretKey", "tKCVbZ6wvApzaq649PdpbGV9yopAZkOY4MZmAv_lK90", String.class);
 
-        Date expiration = Date.from(LocalDateTime.of(2020, 7, 23, 23, 59, 59).atZone(ZoneId.systemDefault()).toInstant());
+        Date expiration = Date.from(LocalDateTime.of(9999, 7, 23, 23, 59, 59).atZone(ZoneId.systemDefault()).toInstant());
         JwtPayload jwtClaimDto = JwtPayload.builder()
             .userId(999999)
             .expiration(expiration)

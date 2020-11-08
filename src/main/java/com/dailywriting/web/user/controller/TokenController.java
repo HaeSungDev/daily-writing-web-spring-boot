@@ -3,7 +3,7 @@ package com.dailywriting.web.user.controller;
 import com.dailywriting.web.security.JwtPayload;
 import com.dailywriting.web.security.JwtTokenProvider;
 import com.dailywriting.web.user.domain.User;
-import com.dailywriting.web.user.domain.UserService;
+import com.dailywriting.web.user.service.UserService;
 import com.dailywriting.web.user.dto.CreateTokenRequestDto;
 import com.dailywriting.web.user.dto.CreateTokenResponseDto;
 import lombok.RequiredArgsConstructor;
