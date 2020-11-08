@@ -1,4 +1,4 @@
-package com.dailywriting.web.Post.domain;
+package com.dailywriting.web.post.domain;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;

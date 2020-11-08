@@ -1,4 +1,4 @@
-package com.dailywriting.web.Post.domain;
+package com.dailywriting.web.post.domain;
 
 import com.dailywriting.web.global.base.BaseTimeEntity;
 import com.dailywriting.web.user.domain.User;

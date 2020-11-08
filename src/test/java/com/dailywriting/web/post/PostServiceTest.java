@@ -1,7 +1,9 @@
 package com.dailywriting.web.post;
 
-import com.dailywriting.web.Post.domain.Post;
-import com.dailywriting.web.Post.domain.PostRepository;
+import com.dailywriting.web.post.domain.Post;
+import com.dailywriting.web.post.domain.PostRepository;
+import com.dailywriting.web.post.dto.CreatePostRequestDto;
+import com.dailywriting.web.post.service.PostService;
 import com.dailywriting.web.user.domain.User;
 import com.dailywriting.web.user.domain.UserRepository;
 import org.junit.jupiter.api.Assertions;
@@ -10,15 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
-public class PostTest {
+public class PostServiceTest {
     @Autowired
     UserRepository userRepository;
 
     @Autowired
     PostRepository postRepository;
+
+    @Autowired
+    PostService postService;
 
     @Test
     @Transactional
@@ -30,15 +35,15 @@ public class PostTest {
 
         userRepository.save(user);
 
-        Post post = Post.builder()
-            .user(user)
-            .title("test")
-            .content("test")
+        CreatePostRequestDto createPostRequestDto = CreatePostRequestDto.builder()
+            .title("test title")
+            .content("test content")
             .build();
 
-        postRepository.save(post);
+        long id = postService.createPost(user.getId(), createPostRequestDto);
 
-        List<Post> posts = postRepository.findAll();
-        Assertions.assertEquals(posts.size(), 1);
+        Post findPost = postRepository.findById(id).get();
+        Assertions.assertEquals(findPost.getTitle(), "test title");
+        Assertions.assertEquals(findPost.getContent(), "test content");
     }
 }

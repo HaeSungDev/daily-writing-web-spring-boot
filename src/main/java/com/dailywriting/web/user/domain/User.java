@@ -1,6 +1,6 @@
 package com.dailywriting.web.user.domain;
 
-import com.dailywriting.web.Post.domain.Post;
+import com.dailywriting.web.post.domain.Post;
 import com.dailywriting.web.global.base.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
